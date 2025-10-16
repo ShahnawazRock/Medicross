@@ -1,0 +1,284 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "header_announcements_9jGBFp": {
+      "type": "header-announcements",
+      "blocks": {
+        "announcement_BxgCk9": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Direkt starten",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_P7BV6g": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Europaweiter Marktführer",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_hh3URB": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Weltweit verfügbar",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_LWn8Q7": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Ergebnis in wenigen Tagen",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "announcement_BxgCk9",
+        "announcement_P7BV6g",
+        "announcement_hh3URB",
+        "announcement_LWn8Q7"
+      ],
+      "name": "t:names.announcement_bar",
+      "settings": {
+        "speed": 5,
+        "section_width": "page-width",
+        "color_scheme": "scheme-2",
+        "divider_width": 0,
+        "padding-block-start": 1,
+        "padding-block-end": 1
+      }
+    },
+    "header_section": {
+      "type": "header",
+      "blocks": {
+        "header-logo": {
+          "type": "_header-logo",
+          "static": true,
+          "settings": {
+            "hide_logo_on_home_page": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "header-menu": {
+          "type": "_header-menu",
+          "disabled": true,
+          "static": true,
+          "settings": {
+            "menu": "main-menu",
+            "color_scheme": "",
+            "type_font_primary_size": "1rem",
+            "menu_font_style": "inverse",
+            "type_font_primary_link": "heading",
+            "type_case_primary_link": "none",
+            "menu_style": "collection_images",
+            "featured_products_aspect_ratio": "4 / 5",
+            "featured_collections_aspect_ratio": "16 / 9",
+            "image_border_radius": 0,
+            "navigation_bar": false,
+            "color_scheme_navigation_bar": "",
+            "drawer_accordion": false,
+            "drawer_accordion_expand_first": false,
+            "drawer_dividers": false
+          },
+          "blocks": {}
+        }
+      },
+      "settings": {
+        "link_text": "Shop",
+        "link": "shopify://collections/shop",
+        "logo_position": "left",
+        "menu_position": "left",
+        "menu_row": "top",
+        "show_search": false,
+        "search_position": "right",
+        "search_row": "top",
+        "show_country": false,
+        "country_selector_style": true,
+        "show_language": true,
+        "localization_font": "heading",
+        "localization_font_size": "1rem",
+        "localization_position": "right",
+        "localization_row": "top",
+        "section_width": "page-width",
+        "section_height": "standard",
+        "enable_sticky_header": "always",
+        "divider_width": 0,
+        "divider_size": "page-width",
+        "border_width": 0,
+        "color_scheme_top": "",
+        "color_scheme_bottom": "",
+        "color_scheme_transparent": "",
+        "enable_transparent_header_home": false,
+        "home_color_scheme": "default",
+        "enable_transparent_header_product": false,
+        "product_color_scheme": "default",
+        "enable_transparent_header_collection": false,
+        "collection_color_scheme": "default"
+      }
+    },
+    "mega_UJU8MJ": {
+      "type": "mega",
+      "blocks": {
+        "contact_info_gMwVE9": {
+          "type": "contact_info",
+          "settings": {
+            "contact_title": "",
+            "email": "info@medicross.com",
+            "email_icon": "shopify://shop_images/icons8-mail_1.svg",
+            "phone": "+49 8382 2792450",
+            "phone_icon": "shopify://shop_images/icons8-phone_1.svg",
+            "whatsapp": "+49 152 15030526",
+            "whatsapp_icon": "shopify://shop_images/icons8-whatsapp_1.svg",
+            "show_reviews": true,
+            "review_count": "1,250+"
+          }
+        },
+        "menu_column_MA8WTT": {
+          "type": "menu_column",
+          "settings": {
+            "column_title": "Produkte für Menschen",
+            "column_title_icon": "shopify://shop_images/Leading_Icon_2.svg",
+            "item_1_title": "Mikronährstofftests",
+            "item_1_icon": "shopify://shop_images/icons8-benzene-ring_1_1.svg",
+            "item_1_description": "",
+            "item_1_link": "",
+            "item_2_title": "Unverträglichkeitstests",
+            "item_2_icon": "shopify://shop_images/Coconut_Milk.svg",
+            "item_2_description": "",
+            "item_2_link": "",
+            "item_3_title": "Kombi-Test",
+            "item_3_icon": "shopify://shop_images/Coconut_Milk_1.svg",
+            "item_3_description": "Mikronährstoff- & Unverträglichkeitstest kombiniert",
+            "item_3_link": "",
+            "item_4_title": "Kombi-Test + Ernährungsberatung",
+            "item_4_icon": "shopify://shop_images/icon5.svg",
+            "item_4_description": "Mikronährstoff- & Unverträglichkeitstest mit einer Erährungsberatung kombiniert",
+            "item_4_link": "",
+            "item_5_title": "",
+            "item_5_description": "",
+            "item_5_link": ""
+          }
+        },
+        "menu_column_HFzcL7": {
+          "type": "menu_column",
+          "settings": {
+            "column_title": "Produkte für Haustiere",
+            "column_title_icon": "shopify://shop_images/Leading_Icon_3.svg",
+            "item_1_title": "Mikronährstofftests",
+            "item_1_icon": "shopify://shop_images/icons8-paw_1.svg",
+            "item_1_description": "",
+            "item_1_link": "",
+            "item_2_title": "Unverträglichkeitstests",
+            "item_2_icon": "shopify://shop_images/icons8-paw_1_2.svg",
+            "item_2_description": "",
+            "item_2_link": "",
+            "item_3_title": "Kombi-Test",
+            "item_3_icon": "shopify://shop_images/icons8-paw_1.svg",
+            "item_3_description": "Mikronährstoff- & Unverträglichkeitstest kombiniert",
+            "item_3_link": "",
+            "item_4_title": "",
+            "item_4_description": "",
+            "item_4_link": "",
+            "item_5_title": "",
+            "item_5_description": "",
+            "item_5_link": ""
+          }
+        },
+        "service_menu_9anULN": {
+          "type": "service_menu",
+          "settings": {
+            "column_title": "Services",
+            "item_1_title": "Ernährungsberatung",
+            "item_1": "shopify://shop_images/icons8-headset_1.svg",
+            "item_1_description": "",
+            "item_1_link": "",
+            "item_2_title": "Nährstoffformeln",
+            "item_2": "shopify://shop_images/icons8-pill_1.svg",
+            "item_2_description": "",
+            "item_2_link": "",
+            "item_3_title": "Fragebogen",
+            "item_3": "shopify://shop_images/icons8-test_2.svg",
+            "item_3_description": "",
+            "item_3_link": "",
+            "item_4_title": "E-Books",
+            "item_4": "shopify://shop_images/E-Learning.svg",
+            "item_4_description": "",
+            "item_4_link": "",
+            "item_5_title": "Kundenservice",
+            "item_5": "shopify://shop_images/icons8-talk_1_1.svg",
+            "item_5_description": "",
+            "item_5_link": "",
+            "item_6_title": "Über uns",
+            "item_6": "shopify://shop_images/icons8-info_1.svg",
+            "item_6_link": "",
+            "item_7_title": "Blog",
+            "item_7": "shopify://shop_images/icons8-test_2.svg",
+            "item_7_link": "",
+            "item_8_title": "",
+            "item_8_description": "",
+            "item_8_link": "",
+            "item_9_title": "",
+            "item_9_description": "",
+            "item_9_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "contact_info_gMwVE9",
+        "menu_column_MA8WTT",
+        "menu_column_HFzcL7",
+        "service_menu_9anULN"
+      ],
+      "name": "Mega Menu Navigation",
+      "settings": {
+        "logo": "shopify://shop_images/Marke.svg",
+        "link_text": "Zum Shop",
+        "link": "shopify://collections/shop"
+      }
+    }
+  },
+  "order": [
+    "header_announcements_9jGBFp",
+    "header_section",
+    "mega_UJU8MJ"
+  ]
+}
