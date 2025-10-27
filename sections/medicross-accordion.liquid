@@ -1,0 +1,78 @@
+{% liquid
+  assign has_heading = section.settings.heading != ''
+%}
+
+{% capture children %}
+  <div class="group-block-content" style="width:100%">
+    {% if has_heading %}
+      <div class="rich-text rte" style="margin-bottom: var(--spacing-4);">
+        {{ section.settings.heading | escape | prepend: '<h2>' | append: '</h2>' }}
+      </div>
+    {% endif %}
+
+    {% content_for 'block', type: 'accordion', id: 'accordion' %}
+  </div>
+{% endcapture %}
+
+{% render 'section', section: section, children: children %}
+
+{% schema %}
+{
+  "name": "Medicross Accordion",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked questions"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" },
+    { "type": "accordion", "name": "Accordion", "limit": 1,
+      "settings": {
+        "icon": "caret",
+        "dividers": true,
+        "type_preset": "h5",
+        "inherit_color_scheme": true,
+        "color_scheme": "",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": "Medicross Accordion",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "accordion": {
+          "type": "accordion",
+          "blocks": {
+            "row-1": { "type": "_accordion-row", "settings": { "open_by_default": true, "heading": "What is the return policy?" },
+              "blocks": { "text-1": { "type": "text", "settings": { "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn’t the case, let us know and we’ll do our best to work with you to make it right.</p>", "width": "100%" } } },
+              "block_order": ["text-1"]
+            },
+            "row-2": { "type": "_accordion-row", "settings": { "heading": "How much does shipping cost?" },
+              "blocks": { "text-1": { "type": "text", "settings": { "text": "<p>Shipping is calculated based on your location and the items in your order. You will always know the shipping price before you purchase.</p>", "width": "100%" } } },
+              "block_order": ["text-1"]
+            }
+          },
+          "block_order": ["row-1", "row-2"]
+        }
+      },
+      "settings": {
+        "heading": "Frequently asked questions"
+      }
+    }
+  ]
+}
+{% endschema %}
