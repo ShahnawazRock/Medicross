@@ -428,6 +428,111 @@
           "block_order": ["caption"]
         }
       }
+    },
+    {
+      "name": "Content + Accordion (image right)",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "media_position": "right",
+        "media_width": "medium",
+        "media_height": "auto",
+        "color_scheme": "scheme-3"
+      },
+      "blocks": {
+        "media": {
+          "type": "_media-without-appearance",
+          "static": true
+        },
+        "content": {
+          "type": "_content-without-appearance",
+          "static": true,
+          "settings": {
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 16
+          },
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<h2>Section heading</h2>",
+                "type_preset": "h3"
+              }
+            },
+            "description": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<p>Add a short description here.</p>",
+                "max_width": "narrow",
+                "type_preset": "rte"
+              }
+            },
+            "accordion": {
+              "type": "accordion",
+              "settings": {
+                "icon": "caret",
+                "dividers": true,
+                "type_preset": "h6"
+              },
+              "blocks": {
+                "row-1": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "open_by_default": true,
+                    "heading": "Accordion heading one"
+                  },
+                  "blocks": {
+                    "text-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Accordion content one.</p>",
+                        "width": "100%"
+                      }
+                    }
+                  },
+                  "block_order": ["text-1"]
+                },
+                "row-2": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Accordion heading two"
+                  },
+                  "blocks": {
+                    "text-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Accordion content two.</p>",
+                        "width": "100%"
+                      }
+                    }
+                  },
+                  "block_order": ["text-1"]
+                },
+                "row-3": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Accordion heading three"
+                  },
+                  "blocks": {
+                    "text-1": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Accordion content three.</p>",
+                        "width": "100%"
+                      }
+                    }
+                  },
+                  "block_order": ["text-1"]
+                }
+              },
+              "block_order": ["row-1", "row-2", "row-3"]
+            }
+          },
+          "block_order": ["heading", "description", "accordion"]
+        }
+      }
     }
   ]
 }
