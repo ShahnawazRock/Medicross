@@ -1,0 +1,88 @@
+/* Medicross Figma Section styles */
+.medicross-figma {
+  width: 100%;
+}
+
+.medicross-figma__grid {
+  display: grid;
+  gap: clamp(16px, 2.5vw, 40px);
+}
+
+@media screen and (min-width: 750px) {
+  .medicross-figma__grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  .medicross-figma__grid.medicross-figma__grid--media-right .medicross-figma__media {
+    order: 2;
+  }
+  .medicross-figma__grid.medicross-figma__grid--media-right .medicross-figma__content {
+    order: 1;
+  }
+}
+
+.medicross-figma__media {
+  position: relative;
+}
+
+.medicross-figma__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-2, 8px);
+}
+
+.medicross-figma__content {
+  display: grid;
+  align-content: start;
+  gap: clamp(8px, 1.5vw, 16px);
+}
+
+.medicross-figma__eyebrow {
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--color-foreground-secondary-rgb, 120 120 120));
+  margin: 0;
+}
+
+.medicross-figma__heading :is(h1,h2,h3,h4,h5,h6) {
+  margin: 0;
+}
+
+.medicross-figma__body {
+  max-width: 65ch;
+}
+
+.medicross-figma__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.medicross-figma__features {
+  display: grid;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media screen and (min-width: 750px) {
+  .medicross-figma__features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.medicross-figma__feature {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.medicross-figma__feature-title {
+  font-weight: 600;
+}
+
+.medicross-figma__feature-text {
+  color: rgb(var(--color-foreground-secondary-rgb, 120 120 120));
+}
