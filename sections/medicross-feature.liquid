@@ -1,0 +1,338 @@
+{% capture children %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+{% render 'section', section: section, children: children, custom_class: section.settings.custom_class %}
+
+{% schema %}
+{
+  "name": "Medicross - Feature",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header"]
+  },
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" },
+    { "type": "text" },
+    { "type": "button" },
+    { "type": "image" },
+    { "type": "video" },
+    { "type": "icon" },
+    { "type": "group" },
+    { "type": "spacer" },
+    { "type": "_divider" }
+  ],
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "text", "id": "custom_class", "label": "Section custom class", "default": "medicross-feature" },
+
+    { "type": "select", "id": "content_direction", "label": "Direction", "options": [
+      { "value": "column", "label": "Vertical" },
+      { "value": "row", "label": "Horizontal" }
+    ], "default": "row" },
+    { "type": "checkbox", "id": "vertical_on_mobile", "label": "Stack on mobile", "default": true, "visible_if": "{{ section.settings.content_direction == 'row' }}" },
+    { "type": "select", "id": "horizontal_alignment", "label": "Horizontal alignment (row)", "options": [
+      { "value": "flex-start", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "flex-end", "label": "Right" },
+      { "value": "space-between", "label": "Space between" }
+    ], "default": "space-between", "visible_if": "{{ section.settings.content_direction == 'row' }}" },
+    { "type": "select", "id": "vertical_alignment", "label": "Vertical alignment (row)", "options": [
+      { "value": "flex-start", "label": "Top" },
+      { "value": "center", "label": "Center" },
+      { "value": "flex-end", "label": "Bottom" }
+    ], "default": "center", "visible_if": "{{ section.settings.content_direction == 'row' }}" },
+    { "type": "select", "id": "horizontal_alignment_flex_direction_column", "label": "Horizontal alignment (column)", "options": [
+      { "value": "flex-start", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "flex-end", "label": "Right" }
+    ], "default": "flex-start", "visible_if": "{{ section.settings.content_direction != 'row' }}" },
+    { "type": "select", "id": "vertical_alignment_flex_direction_column", "label": "Vertical alignment (column)", "options": [
+      { "value": "flex-start", "label": "Top" },
+      { "value": "center", "label": "Center" },
+      { "value": "flex-end", "label": "Bottom" },
+      { "value": "space-between", "label": "Space between" }
+    ], "default": "center", "visible_if": "{{ section.settings.content_direction == 'column' }}" },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 },
+
+    { "type": "header", "content": "Size" },
+    { "type": "select", "id": "section_width", "label": "Width", "options": [
+      { "value": "page-width", "label": "Page width" },
+      { "value": "full-width", "label": "Full width" }
+    ], "default": "page-width" },
+    { "type": "select", "id": "section_height", "label": "Height", "options": [
+      { "value": "", "label": "Auto" },
+      { "value": "small", "label": "Small" },
+      { "value": "medium", "label": "Medium" },
+      { "value": "large", "label": "Large" },
+      { "value": "full-screen", "label": "Full screen" },
+      { "value": "custom", "label": "Custom" }
+    ], "default": "" },
+    { "type": "range", "id": "section_height_custom", "label": "Custom height", "min": 0, "max": 100, "step": 1, "default": 50, "unit": "%", "visible_if": "{{ section.settings.section_height == 'custom' }}" },
+
+    { "type": "header", "content": "Appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "select", "id": "background_media", "label": "Background media", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "image", "label": "Image" },
+      { "value": "video", "label": "Video" }
+    ], "default": "none" },
+    { "type": "video", "id": "video", "label": "Background video", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    { "type": "select", "id": "background_image_position", "label": "Image fit", "options": [
+      { "value": "cover", "label": "Cover" },
+      { "value": "fit", "label": "Contain" }
+    ], "default": "cover", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+
+    { "type": "select", "id": "border", "label": "Border style", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "solid", "label": "Solid" }
+    ], "default": "none" },
+    { "type": "range", "id": "border_width", "min": 0, "max": 10, "step": 0.5, "unit": "px", "label": "Border width", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Border opacity", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "Corner radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+
+    { "type": "checkbox", "id": "toggle_overlay", "label": "Background overlay" },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "alpha": true, "default": "#00000026", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    { "type": "select", "id": "overlay_style", "label": "Overlay style", "options": [
+      { "value": "solid", "label": "Solid" },
+      { "value": "gradient", "label": "Gradient" }
+    ], "default": "solid", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    { "type": "select", "id": "gradient_direction", "label": "Gradient direction", "options": [
+      { "value": "to top", "label": "Up" },
+      { "value": "to bottom", "label": "Down" }
+    ], "default": "to top", "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}" },
+
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "Medicross Feature",
+      "category": "Storytelling",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "space-between",
+        "vertical_alignment": "center",
+        "gap": 32,
+        "section_width": "page-width",
+        "section_height": "",
+        "color_scheme": "scheme-1",
+        "background_media": "none",
+        "border": "none",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      },
+      "blocks": {
+        "content": {
+          "type": "group",
+          "name": "Content",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 16,
+            "width": "custom",
+            "custom_width": 50,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "border": "none",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "name": "Eyebrow",
+              "settings": {
+                "text": "<p>Our Services</p>",
+                "type_preset": "h6",
+                "width": "fit-content",
+                "alignment": "left",
+                "padding-block-end": 0
+              }
+            },
+            "heading": {
+              "type": "text",
+              "name": "Heading",
+              "settings": {
+                "text": "<h2>Complete care, close to home</h2>",
+                "type_preset": "h2",
+                "max_width": "narrow",
+                "alignment": "left"
+              }
+            },
+            "desc": {
+              "type": "text",
+              "name": "Description",
+              "settings": {
+                "text": "<p>Trusted medical care for your family, with convenient booking and compassionate clinicians.</p>",
+                "type_preset": "rte",
+                "max_width": "narrow",
+                "alignment": "left",
+                "padding-block-end": 8
+              }
+            },
+            "features": {
+              "type": "group",
+              "name": "Feature list",
+              "settings": {
+                "content_direction": "column",
+                "gap": 8,
+                "width": "fit-content",
+                "height": "fit",
+                "inherit_color_scheme": true,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "feature_1": {
+                  "type": "group",
+                  "name": "Feature",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "gap": 8,
+                    "width": "fit-content",
+                    "height": "fit",
+                    "inherit_color_scheme": true
+                  },
+                  "blocks": {
+                    "icon": {
+                      "type": "icon",
+                      "settings": { "icon": "heart", "width": 20 }
+                    },
+                    "text": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Primary and urgent care</p>",
+                        "type_preset": "paragraph",
+                        "alignment": "left"
+                      }
+                    }
+                  },
+                  "block_order": ["icon", "text"]
+                },
+                "feature_2": {
+                  "type": "group",
+                  "name": "Feature",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "gap": 8,
+                    "width": "fit-content",
+                    "height": "fit",
+                    "inherit_color_scheme": true
+                  },
+                  "blocks": {
+                    "icon": {
+                      "type": "icon",
+                      "settings": { "icon": "silhouette", "width": 20 }
+                    },
+                    "text": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Experienced clinicians</p>",
+                        "type_preset": "paragraph",
+                        "alignment": "left"
+                      }
+                    }
+                  },
+                  "block_order": ["icon", "text"]
+                },
+                "feature_3": {
+                  "type": "group",
+                  "name": "Feature",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "gap": 8,
+                    "width": "fit-content",
+                    "height": "fit",
+                    "inherit_color_scheme": true
+                  },
+                  "blocks": {
+                    "icon": {
+                      "type": "icon",
+                      "settings": { "icon": "eye", "width": 20 }
+                    },
+                    "text": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>On-site labs and imaging</p>",
+                        "type_preset": "paragraph",
+                        "alignment": "left"
+                      }
+                    }
+                  },
+                  "block_order": ["icon", "text"]
+                }
+              },
+              "block_order": ["feature_1", "feature_2", "feature_3"]
+            },
+            "buttons": {
+              "type": "group",
+              "name": "Buttons",
+              "settings": {
+                "content_direction": "row",
+                "gap": 12,
+                "height": "fit",
+                "inherit_color_scheme": true
+              },
+              "blocks": {
+                "primary": {
+                  "type": "button",
+                  "settings": { "label": "Book appointment", "link": "shopify://pages/contact", "style_class": "button" }
+                },
+                "secondary": {
+                  "type": "button",
+                  "settings": { "label": "Learn more", "link": "shopify://collections/all", "style_class": "link" }
+                }
+              },
+              "block_order": ["primary", "secondary"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "desc", "features", "buttons"]
+        },
+        "media": {
+          "type": "image",
+          "name": "Image",
+          "settings": {
+            "image": "",
+            "image_ratio": "square",
+            "width": "custom",
+            "custom_width": 45,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        }
+      },
+      "block_order": ["content", "media"]
+    }
+  ]
+}
+{% endschema %}
