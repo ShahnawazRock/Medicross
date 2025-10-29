@@ -1,0 +1,276 @@
+{% liquid
+  assign columns_desktop = section.settings.columns_desktop | default: 3
+  assign align_header = section.settings.header_alignment | default: 'center'
+%}
+
+{% capture children %}
+  <div class="medicross-prefooter" style="--columns: {{ columns_desktop }};">
+    {% if section.settings.kicker != blank or section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="medicross-prefooter__header medicross-prefooter__header--align-{{ align_header }}">
+        {% if section.settings.kicker != blank %}
+          <p class="medicross-prefooter__kicker">{{ section.settings.kicker }}</p>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <h2 class="medicross-prefooter__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <div class="medicross-prefooter__subheading rte">{{ section.settings.subheading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="medicross-prefooter__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'cta' %}
+              <div class="medicross-prefooter__card" {{ block.shopify_attributes }}>
+                <div class="medicross-prefooter__card-inner">
+                  {% if block.settings.icon != blank %}
+                    {{
+                      block.settings.icon
+                      | image_url: width: 160
+                      | image_tag:
+                        widths: '80, 120, 160',
+                        alt: block.settings.icon.alt,
+                        class: 'medicross-prefooter__icon',
+                        sizes: '(min-width: 990px) 48px, 40px'
+                    }}
+                  {% endif %}
+
+                  <div class="medicross-prefooter__content">
+                    {% if block.settings.title != blank %}
+                      <h3 class="medicross-prefooter__title">{{ block.settings.title }}</h3>
+                    {% endif %}
+                    {% if block.settings.text != blank %}
+                      <div class="medicross-prefooter__text rte">{{ block.settings.text }}</div>
+                    {% endif %}
+
+                    {% if block.settings.link != blank and block.settings.label != blank %}
+                      <div class="medicross-prefooter__cta">
+                        <a href="{{ block.settings.link }}" class="{{ block.settings.style_class | default: 'button' }}">
+                          {{ block.settings.label }}
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endcapture %}
+
+{% render 'section', section: section, children: children, custom_class: 'medicross-prefooter-wrapper' %}
+
+{% stylesheet %}
+  .medicross-prefooter {
+    display: grid;
+    gap: clamp(16px, 2.5vw, 32px);
+  }
+
+  .medicross-prefooter__header {
+    display: grid;
+    gap: 8px;
+    max-width: min(100%, 900px);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .medicross-prefooter__header--align-left {
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  .medicross-prefooter__kicker {
+    color: var(--color-foreground-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+  }
+
+  .medicross-prefooter__heading {
+    margin: 0;
+    font: var(--font-h3);
+    color: var(--color-foreground-heading, var(--color-foreground));
+  }
+
+  .medicross-prefooter__subheading {
+    color: var(--color-foreground-muted);
+  }
+
+  .medicross-prefooter__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(12px, 2vw, 20px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .medicross-prefooter__grid {
+      grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+    }
+  }
+
+  .medicross-prefooter__card {
+    background: color-mix(in oklab, var(--color-background) 92%, transparent);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: clamp(16px, 2vw, 24px);
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .medicross-prefooter__card:hover {
+    border-color: var(--color-border-strong, var(--color-border));
+    transform: translateY(-2px);
+  }
+
+  .medicross-prefooter__card-inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .medicross-prefooter__icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .medicross-prefooter__title {
+    margin: 0 0 4px 0;
+    font: var(--font-h5);
+    color: var(--color-foreground-heading, var(--color-foreground));
+  }
+
+  .medicross-prefooter__text {
+    color: var(--color-foreground);
+  }
+
+  .medicross-prefooter__cta {
+    margin-top: 12px;
+  }
+
+  .medicross-prefooter__cta .button,
+  .medicross-prefooter__cta .link {
+    text-decoration: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Medicross pre-footer CTA",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "We're here to help" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your health, our priority" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Find care, book appointments, or contact our team. Everything you need in one place.</p>" },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "page-width"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 40 }
+  ],
+  "blocks": [
+    {
+      "type": "cta",
+      "name": "CTA card",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Find a clinic" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Search for your nearest Medicross facility.</p>" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "label", "label": "Button label", "default": "Find now" },
+        {
+          "type": "select",
+          "id": "style_class",
+          "label": "Link style",
+          "options": [
+            { "value": "button", "label": "Primary button" },
+            { "value": "link", "label": "Text link" }
+          ],
+          "default": "button"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Medicross pre-footer CTA",
+      "category": "Banners",
+      "settings": {
+        "kicker": "Need assistance?",
+        "heading": "Care made simpler",
+        "subheading": "<p>Find locations, book an appointment, or get in touch.</p>",
+        "columns_desktop": 3,
+        "color_scheme": "scheme-2",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      },
+      "blocks": {
+        "cta_1": {
+          "type": "cta",
+          "settings": {
+            "title": "Find a clinic",
+            "text": "<p>Locate your nearest Medicross facility.</p>",
+            "label": "Find now"
+          }
+        },
+        "cta_2": {
+          "type": "cta",
+          "settings": {
+            "title": "Book an appointment",
+            "text": "<p>Schedule a visit with a practitioner.</p>",
+            "label": "Book now"
+          }
+        },
+        "cta_3": {
+          "type": "cta",
+          "settings": {
+            "title": "Contact us",
+            "text": "<p>Have a question? We're here to help.</p>",
+            "label": "Get in touch"
+          }
+        }
+      },
+      "block_order": ["cta_1", "cta_2", "cta_3"]
+    }
+  ]
+}
+{% endschema %}
