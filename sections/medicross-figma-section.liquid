@@ -1,0 +1,409 @@
+{% liquid
+  assign layout_class = ''
+  if section.settings.layout == 'media-right'
+    assign layout_class = 'medicross-figma__grid--media-right'
+  else
+    assign layout_class = 'medicross-figma__grid--media-left'
+  endif
+%}
+
+<link rel="stylesheet" href="{{ 'medicross-figma-section.css' | asset_url }}" media="all">
+
+{% capture children %}
+  <div class="medicross-figma">
+    <div class="medicross-figma__grid {{ layout_class }}">
+      <div class="medicross-figma__media">
+        {% if section.settings.image != blank %}
+          {% liquid
+            assign media_width_desktop = '100vw'
+            assign media_width_mobile = '100vw'
+            assign sizes = '(min-width: 1024px) 1024px, ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+            assign widths = '352, 640, 832, 1200, 1600'
+          %}
+          {{
+            section.settings.image
+            | image_url: width: 1600
+            | image_tag:
+              widths: widths,
+              class: 'medicross-figma__image',
+              sizes: sizes,
+              alt: section.settings.image.alt
+          }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'medicross-figma__image' }}
+        {% endif %}
+      </div>
+      <div class="medicross-figma__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="medicross-figma__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="medicross-figma__heading">{{ section.settings.heading }}</div>
+        {% endif %}
+
+        {% if section.settings.body != blank %}
+          <div class="medicross-figma__body rte">{{ section.settings.body }}</div>
+        {% endif %}
+
+        {% if section.settings.primary_button_label != blank or section.settings.secondary_button_label != blank %}
+          <div class="medicross-figma__buttons">
+            {% if section.settings.primary_button_label != blank %}
+              <a
+                class="button"
+                href="{{ section.settings.primary_button_link }}"
+                {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener"{% endif %}
+              >{{ section.settings.primary_button_label }}</a>
+            {% endif %}
+            {% if section.settings.secondary_button_label != blank %}
+              <a
+                class="button button--secondary"
+                href="{{ section.settings.secondary_button_link }}"
+                {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener"{% endif %}
+              >{{ section.settings.secondary_button_label }}</a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="medicross-figma__features">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'feature' -%}
+                  <div class="medicross-figma__feature" {{ block.shopify_attributes }}>
+                    <div class="medicross-figma__feature-icon">
+                      {% render 'icon-or-image',
+                        icon: block.settings.icon,
+                        image_upload: block.settings.icon_image,
+                        width: block.settings.icon_width,
+                        class_name: 'medicross-figma__icon'
+                      %}
+                    </div>
+                    <div class="medicross-figma__feature-content">
+                      {% if block.settings.title != blank %}
+                        <div class="medicross-figma__feature-title">{{ block.settings.title }}</div>
+                      {% endif %}
+                      {% if block.settings.text != blank %}
+                        <div class="medicross-figma__feature-text rte">{{ block.settings.text }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endcapture %}
+
+{%- render 'section', section: section, children: children, custom_class: 'medicross-figma-wrapper' -%}
+
+{% schema %}
+{
+  "name": "Medicross Figma Section",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header"]
+  },
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "checkmark",
+          "options": [
+            { "value": "checkmark", "label": "Checkmark" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "star", "label": "Star" },
+            { "value": "search", "label": "Search" },
+            { "value": "none", "label": "None" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon image"
+        },
+        {
+          "type": "range",
+          "id": "icon_width",
+          "label": "Icon width",
+          "min": 12,
+          "max": 128,
+          "step": 1,
+          "unit": "px",
+          "default": 32
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Short supporting copy for this feature.</p>"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Eyebrow"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<h2>Section heading</h2>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Body copy goes here. Make it concise and informative.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "media-left",
+      "options": [
+        { "value": "media-left", "label": "Image left, content right" },
+        { "value": "media-right", "label": "Image right, content left" }
+      ]
+    },
+
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary button label",
+      "default": "Primary CTA"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "primary_button_new_tab",
+      "label": "Open primary in new tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_button_new_tab",
+      "label": "Open secondary in new tab",
+      "default": false
+    },
+
+    {
+      "type": "header",
+      "content": "Layout & appearance"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height",
+      "options": [
+        { "value": "", "label": "Auto" },
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "full-screen", "label": "Full screen" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "section_height_custom",
+      "label": "Custom height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%",
+      "visible_if": "{{ section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+
+    {
+      "type": "header",
+      "content": "Background media (optional)"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "Background media",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Background video",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "Background image position",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "fit", "label": "Fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "Enable overlay",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "options": [
+        { "value": "to top", "label": "Up" },
+        { "value": "to bottom", "label": "Down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Medicross Figma Section",
+      "category": "Storytelling",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "icon": "checkmark",
+            "title": "Feature one",
+            "text": "<p>Short supporting copy.</p>"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "icon": "star",
+            "title": "Feature two",
+            "text": "<p>Short supporting copy.</p>"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2"],
+      "settings": {
+        "eyebrow": "Eyebrow",
+        "heading": "<h2>Section heading</h2>",
+        "body": "<p>Body copy goes here. Make it concise and informative.</p>",
+        "section_width": "page-width",
+        "layout": "media-left"
+      }
+    }
+  ]
+}
+{% endschema %}
