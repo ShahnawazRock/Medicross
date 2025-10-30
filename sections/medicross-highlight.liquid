@@ -1,0 +1,236 @@
+{% comment %}
+  Medicross Highlight Section
+  - Flexible hero/intro with heading, subtext, CTA
+  - Features grid with icon/title/text
+  - Uses theme 'section' snippet wrapper for consistent spacing and background controls
+{% endcomment %}
+
+{% capture children %}
+  <div class="medicross-highlight__inner">
+    {% if section.settings.eyebrow != '' %}
+      <p class="medicross-highlight__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != '' %}
+      <h2 class="medicross-highlight__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.text != '' %}
+      <div class="medicross-highlight__text rte">
+        {{ section.settings.text }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.cta_label != '' and section.settings.cta_link != blank %}
+      <div class="medicross-highlight__cta">
+        <a class="button" href="{{ section.settings.cta_link }}"{% if section.settings.cta_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ section.settings.cta_label }}</a>
+        {% if section.settings.secondary_label != '' and section.settings.secondary_link != blank %}
+          <a class="link" href="{{ section.settings.secondary_link }}"{% if section.settings.secondary_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ section.settings.secondary_label }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="medicross-highlight__features" style="--cols: {{ section.settings.columns_desktop }}; --gap: {{ section.settings.grid_gap }}px;">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'feature' %}
+              <div class="medicross-feature" {{ block.shopify_attributes }}>
+                <div class="medicross-feature__icon">
+                  {% if block.settings.icon_image != blank %}
+                    {{ block.settings.icon_image | image_url: width: 96 | image_tag: widths: '48,64,96', sizes: '(min-width: 990px) 64px, 48px', loading: 'lazy', alt: block.settings.title | escape }}
+                  {% elsif block.settings.icon_name != 'none' %}
+                    {% render 'icon', icon: block.settings.icon_name %}
+                  {% endif %}
+                </div>
+                {% if block.settings.title != '' %}
+                  <h3 class="medicross-feature__title">{{ block.settings.title }}</h3>
+                {% endif %}
+                {% if block.settings.body != '' %}
+                  <div class="medicross-feature__body rte">{{ block.settings.body }}</div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endcapture %}
+
+{% render 'section', section: section, children: children, custom_class: section.settings.custom_class %}
+
+{% stylesheet %}
+  .medicross-highlight__inner {
+    display: grid;
+    gap: 16px;
+    max-width: 100%;
+  }
+
+  .medicross-highlight__eyebrow {
+    color: var(--color-foreground-60);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .medicross-highlight__heading {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+    line-height: 1.2;
+  }
+
+  .medicross-highlight__text {
+    max-width: 70ch;
+  }
+
+  .medicross-highlight__cta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .medicross-highlight__features {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+    gap: var(--gap, 16px);
+    margin-top: 8px;
+  }
+
+  @media (max-width: 989px) {
+    .medicross-highlight__features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 599px) {
+    .medicross-highlight__features {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .medicross-feature {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
+    border-radius: 10px;
+    background: color-mix(in oklab, var(--color-background) 100%, transparent);
+  }
+
+  .medicross-feature__icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .medicross-feature__title {
+    font-size: 1.05rem;
+    margin: 0;
+  }
+
+  .medicross-feature__body {
+    margin: 0;
+    color: var(--color-foreground-80);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Medicross highlight",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Medicross" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Comprehensive medical care, centered on you" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>From routine checkups to specialized treatments, our team delivers quality care with compassion.</p>" },
+    { "type": "text", "id": "cta_label", "label": "Primary CTA label", "default": "Book an appointment" },
+    { "type": "url", "id": "cta_link", "label": "Primary CTA link" },
+    { "type": "checkbox", "id": "cta_new_tab", "label": "Open primary CTA in new tab", "default": false },
+    { "type": "text", "id": "secondary_label", "label": "Secondary link label", "default": "Learn more" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary link URL" },
+    { "type": "checkbox", "id": "secondary_new_tab", "label": "Open secondary link in new tab", "default": false },
+
+    { "type": "header", "content": "Features grid" },
+    { "type": "range", "id": "columns_desktop", "label": "Columns on desktop", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "grid_gap", "label": "Grid gap (px)", "min": 8, "max": 48, "step": 1, "default": 16 },
+
+    { "type": "header", "content": "Appearance" },
+    { "type": "text", "id": "custom_class", "label": "Section custom class", "default": "medicross-highlight" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "select", "id": "section_width", "label": "Width", "options": [
+      { "value": "page-width", "label": "Page width" },
+      { "value": "full-width", "label": "Full width" }
+    ], "default": "page-width" },
+    { "type": "range", "id": "padding-block-start", "label": "Padding top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding-block-end", "label": "Padding bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 48 },
+
+    { "type": "select", "id": "background_media", "label": "Background media", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "image", "label": "Image" },
+      { "value": "video", "label": "Video" }
+    ], "default": "none" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    { "type": "select", "id": "background_image_position", "label": "Image position", "options": [
+      { "value": "cover", "label": "Cover" },
+      { "value": "fit", "label": "Fit" }
+    ], "default": "cover", "visible_if": "{{ section.settings.background_media == 'image' }}" },
+    { "type": "video", "id": "video", "label": "Background video", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+    { "type": "select", "id": "video_position", "label": "Video position", "options": [
+      { "value": "cover", "label": "Cover" },
+      { "value": "contain", "label": "Contain" }
+    ], "default": "cover", "visible_if": "{{ section.settings.background_media == 'video' }}" },
+
+    { "type": "checkbox", "id": "toggle_overlay", "label": "Enable background overlay", "default": false },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "alpha": true, "default": "#00000026", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    { "type": "select", "id": "overlay_style", "label": "Overlay style", "options": [
+      { "value": "solid", "label": "Solid" },
+      { "value": "gradient", "label": "Gradient" }
+    ], "default": "solid", "visible_if": "{{ section.settings.toggle_overlay }}" },
+    { "type": "select", "id": "gradient_direction", "label": "Gradient direction", "options": [
+      { "value": "to top", "label": "To top" },
+      { "value": "to bottom", "label": "To bottom" }
+    ], "default": "to top", "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}" },
+
+    { "type": "select", "id": "border", "label": "Borders", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "solid", "label": "Solid" }
+    ], "default": "none" },
+    { "type": "range", "id": "border_width", "label": "Border width", "min": 0, "max": 10, "step": 0.5, "unit": "px", "default": 1, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_opacity", "label": "Border opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 100, "visible_if": "{{ section.settings.border != 'none' }}" },
+    { "type": "range", "id": "border_radius", "label": "Border radius", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "select", "id": "icon_name", "label": "Icon name", "options": [
+          { "value": "none", "label": "None" },
+          { "value": "available", "label": "Check" },
+          { "value": "heart", "label": "Heart" },
+          { "value": "eye", "label": "Eye" },
+          { "value": "silhouette", "label": "User" },
+          { "value": "plus", "label": "Plus" },
+          { "value": "caret", "label": "Caret" }
+        ], "default": "available" },
+        { "type": "image_picker", "id": "icon_image", "label": "Custom icon image (optional)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Primary care" },
+        { "type": "richtext", "id": "body", "label": "Description", "default": "<p>Comprehensive general health services for every stage of life.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Medicross highlight",
+      "category": "Storytelling",
+      "blocks": [
+        { "type": "feature" },
+        { "type": "feature" },
+        { "type": "feature" }
+      ]
+    }
+  ]
+}
+{% endschema %}
