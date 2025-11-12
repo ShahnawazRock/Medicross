@@ -1,5 +1,5 @@
 {%- doc -%}
-  Renders a contact form with name, email, phone, and comment fields.
+  Renders the Medicross contact form with dedicated groupings and custom styling.
 
   @param {object} settings - Block settings, required for the 'spacing-style' and 'size-style' snippets.
   @param {string} submit_button - HTML for the submit button, rendered via a `content_for` block.
@@ -10,7 +10,7 @@
 
 <div
   class="
-    contact-form
+    contact-form medicross-contact
     spacing-style size-style
     {% if settings.inherit_color_scheme == false %}color-{{ settings.color_scheme }}{% endif %}
   "
@@ -20,151 +20,611 @@
   "
   {{ block.shopify_attributes }}
 >
-  {% assign form_id = block.id | default: section.id | prepend: 'ContactForm-' %}
+  <div class="medicross-contact__wrapper">
+    <div class="medicross-contact__surface">
+      <header class="medicross-contact__header">
+        <div class="medicross-contact__heading-bar">
+          <h2 class="medicross-contact__heading">Kontaktanfrage</h2>
+          <div class="medicross-contact__avatars" aria-hidden="true">
+            <span class="medicross-contact__avatar medicross-contact__avatar--primary">D</span>
+            <span class="medicross-contact__avatar medicross-contact__avatar--secondary"></span>
+          </div>
+        </div>
+        <p class="medicross-contact__description">
+          Damit wir Dir ein passendes Angebot erstellen können, fülle bitte alle relevanten Felder aus.
+          Die Preise erhältst Du auf Anfrage.
+        </p>
+      </header>
 
-  {%- form 'contact', id: form_id, class: 'contact-form__form' -%}
-    {%- if form.errors -%}
-      <div
-        class="contact-form__error"
-        tabindex="-1"
-        autofocus
-      >
-        {{- 'icon-error.svg' | inline_asset_content -}}
+      {% assign form_id = block.id | default: section.id | prepend: 'ContactForm-' %}
+      {% assign email_error_id = '' %}
 
-        {{- form.errors.translated_fields.email | capitalize }}
-        {{ form.errors.messages.email -}}
-      </div>
-    {%- endif -%}
-
-    {%- if form.posted_successfully? -%}
-      <div
-        class="contact-form__success"
-        tabindex="-1"
-        autofocus
-      >
-        {{- 'icon-checkmark.svg' | inline_asset_content -}}
-        {{- 'blocks.contact_form.post_success' | t -}}
-      </div>
-    {%- endif -%}
-
-    <div class="contact-form__form-row">
-      <label
-        class="visually-hidden"
-        for="ContactForm-name"
-      >
-        {{- 'blocks.contact_form.name' | t -}}
-      </label>
-      <input
-        type="text"
-        id="ContactForm-name"
-        class="contact-form__input"
-        autocomplete="name"
-        name="contact[name]"
-        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-        placeholder="{{ 'blocks.contact_form.name' | t }}"
-      >
-
-      <label
-        class="visually-hidden"
-        for="ContactForm-email"
-      >
-        {{- 'blocks.contact_form.email' | t -}}
-        <span aria-hidden="true">*</span></label
-      >
-      <input
-        type="email"
-        id="ContactForm-email"
-        class="contact-form__input"
-        autocomplete="email"
-        name="contact[email]"
-        spellcheck="false"
-        autocapitalize="off"
-        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-        aria-required="true"
-        {% if form.errors contains 'email' %}
-          aria-invalid="true"
-          aria-describedby="ContactForm-email-error"
+      {%- form 'contact', id: form_id, class: 'medicross-contact__form', novalidate: 'novalidate' -%}
+        {% if form.errors and form.errors contains 'email' %}
+          {% assign email_error_id = form_id | append: '-email-error' %}
         {% endif %}
-        placeholder="{{ 'blocks.contact_form.email' | t }}"
-      >
+
+        {%- if form.errors -%}
+          <div
+            class="contact-form__error medicross-contact__feedback medicross-contact__feedback--error"
+            role="alert"
+            tabindex="-1"
+            autofocus
+          >
+            {{- 'icon-error.svg' | inline_asset_content -}}
+            <span>
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </span>
+          </div>
+        {%- endif -%}
+
+        {%- if form.posted_successfully? -%}
+          <div
+            class="contact-form__success medicross-contact__feedback medicross-contact__feedback--success"
+            role="status"
+            tabindex="-1"
+            autofocus
+          >
+            {{- 'icon-checkmark.svg' | inline_asset_content -}}
+            <span>{{- 'blocks.contact_form.post_success' | t -}}</span>
+          </div>
+        {%- endif -%}
+
+        <div class="medicross-contact__grid">
+          <fieldset class="medicross-contact__group medicross-contact__group--primary">
+            <legend class="medicross-contact__legend">
+              <span class="medicross-contact__step">1</span>
+              <span class="medicross-contact__legend-text">Persönliche Daten</span>
+            </legend>
+            <div class="medicross-contact__inputs">
+              {% assign first_name_id = form_id | append: '-first-name' %}
+              <label class="visually-hidden" for="{{ first_name_id }}">Vorname</label>
+              <input
+                id="{{ first_name_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[first_name]"
+                autocomplete="given-name"
+                placeholder="Vorname"
+                value="{{ form['first_name'] | default: customer.first_name | escape }}"
+              >
+
+              {% assign last_name_id = form_id | append: '-last-name' %}
+              <label class="visually-hidden" for="{{ last_name_id }}">Nachname</label>
+              <input
+                id="{{ last_name_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[last_name]"
+                autocomplete="family-name"
+                placeholder="Nachname"
+                value="{{ form['last_name'] | default: customer.last_name | escape }}"
+              >
+
+              {% assign praxis_id = form_id | append: '-praxis' %}
+              <label class="visually-hidden" for="{{ praxis_id }}">Praxis-/Institutsname</label>
+              <input
+                id="{{ praxis_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[praxis_name]"
+                placeholder="Praxis-/Institutsname"
+                value="{{ form['praxis_name'] | escape }}"
+              >
+
+              {% assign email_id = form_id | append: '-email' %}
+              <label class="visually-hidden" for="{{ email_id }}">E-Mail-Adresse</label>
+              <input
+                id="{{ email_id }}"
+                class="medicross-contact__input"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                spellcheck="false"
+                autocapitalize="off"
+                placeholder="E-Mail-Adresse"
+                value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}"
+                required
+                aria-required="true"
+                {% if email_error_id != '' %}
+                  aria-invalid="true"
+                  aria-describedby="{{ email_error_id }}"
+                {% endif %}
+              >
+              {% if email_error_id != '' %}
+                <p id="{{ email_error_id }}" class="medicross-contact__inline-error">
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </p>
+              {% endif %}
+
+              {% assign phone_id = form_id | append: '-phone' %}
+              <label class="visually-hidden" for="{{ phone_id }}">Telefonnummer (optional)</label>
+              <input
+                id="{{ phone_id }}"
+                class="medicross-contact__input"
+                type="tel"
+                name="contact[phone]"
+                autocomplete="tel"
+                placeholder="Telefonnummer (optional)"
+                value="{% if form.phone %}{{ form.phone | escape }}{% elsif customer %}{{ customer.phone | escape }}{% endif %}"
+              >
+
+              {% assign location_id = form_id | append: '-location' %}
+              <label class="visually-hidden" for="{{ location_id }}">Land / Wohnort</label>
+              <input
+                id="{{ location_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[location]"
+                placeholder="Land / Wohnort"
+                value="{{ form['location'] | escape }}"
+              >
+            </div>
+          </fieldset>
+
+          <fieldset class="medicross-contact__group medicross-contact__group--secondary">
+            <legend class="medicross-contact__legend">
+              <span class="medicross-contact__step">2</span>
+              <span class="medicross-contact__legend-text">Beruflicher Hintergrund</span>
+            </legend>
+            <div class="medicross-contact__inputs">
+              {% assign specialty_id = form_id | append: '-specialty' %}
+              <label class="visually-hidden" for="{{ specialty_id }}">Fachrichtung</label>
+              <input
+                id="{{ specialty_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[fachrichtung]"
+                placeholder="Fachrichtung"
+                value="{{ form['fachrichtung'] | escape }}"
+              >
+
+              {% assign expertise_id = form_id | append: '-expertise' %}
+              <label class="visually-hidden" for="{{ expertise_id }}">Spezialisierung (falls vorhanden)</label>
+              <input
+                id="{{ expertise_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[spezialisierung]"
+                placeholder="Spezialisierung (falls vorhanden)"
+                value="{{ form['spezialisierung'] | escape }}"
+              >
+
+              {% assign practice_size_id = form_id | append: '-practice-size' %}
+              <label class="visually-hidden" for="{{ practice_size_id }}">Praxisgröße</label>
+              <input
+                id="{{ practice_size_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[praxisgroesse]"
+                placeholder="Praxisgröße"
+                value="{{ form['praxisgroesse'] | escape }}"
+              >
+
+              {% assign volume_id = form_id | append: '-volume' %}
+              <label class="visually-hidden" for="{{ volume_id }}">Analysevolumen</label>
+              <input
+                id="{{ volume_id }}"
+                class="medicross-contact__input"
+                type="text"
+                name="contact[analysevolumen]"
+                placeholder="Analysevolumen"
+                value="{{ form['analysevolumen'] | escape }}"
+              >
+            </div>
+          </fieldset>
+
+          <fieldset class="medicross-contact__group medicross-contact__group--fourth">
+            <legend class="medicross-contact__legend">
+              <span class="medicross-contact__step">4</span>
+              <span class="medicross-contact__legend-text">Gewünschte Art</span>
+            </legend>
+            <div class="medicross-contact__checkboxes">
+              {% assign docs_id = form_id | append: '-unterlagen' %}
+              <div class="medicross-contact__checkbox">
+                <input
+                  id="{{ docs_id }}"
+                  type="checkbox"
+                  name="contact[unterlagen]"
+                  value="Ja"
+                  {% if form['unterlagen'] != blank %}
+                    checked
+                  {% endif %}
+                >
+                <label for="{{ docs_id }}">Unterlagen für die Praxis</label>
+              </div>
+
+              {% assign affiliate_id = form_id | append: '-affiliate' %}
+              <div class="medicross-contact__checkbox">
+                <input
+                  id="{{ affiliate_id }}"
+                  type="checkbox"
+                  name="contact[affiliate_link]"
+                  value="Ja"
+                  {% if form['affiliate_link'] != blank %}
+                    checked
+                  {% endif %}
+                >
+                <label for="{{ affiliate_id }}">Affiliate-Link</label>
+              </div>
+
+              {% assign cooperation_id = form_id | append: '-cooperation' %}
+              <div class="medicross-contact__checkbox">
+                <input
+                  id="{{ cooperation_id }}"
+                  type="checkbox"
+                  name="contact[sonstige_kooperation]"
+                  value="Ja"
+                  {% if form['sonstige_kooperation'] != blank %}
+                    checked
+                  {% endif %}
+                >
+                <label for="{{ cooperation_id }}">Sonstige Kooperation</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="medicross-contact__group medicross-contact__group--tertiary">
+            <legend class="medicross-contact__legend">
+              <span class="medicross-contact__step">3</span>
+              <span class="medicross-contact__legend-text">Deine Fragen, Wünsche</span>
+            </legend>
+            {% assign message_id = form_id | append: '-message' %}
+            <label class="visually-hidden" for="{{ message_id }}">Kurze Auflistung oder Beispiele (falls vorhanden)</label>
+            <textarea
+              id="{{ message_id }}"
+              class="medicross-contact__input medicross-contact__textarea"
+              name="contact[body]"
+              placeholder="Kurze Auflistung oder Beispiele (falls vorhanden)"
+              rows="6"
+            >{{- form.body -}}</textarea>
+          </fieldset>
+        </div>
+
+        <div class="medicross-contact__footer">
+          {{ submit_button }}
+        </div>
+      {%- endform -%}
     </div>
-
-    <label
-      class="visually-hidden"
-      for="ContactForm-phone"
-    >
-      {{- 'blocks.contact_form.phone' | t -}}
-    </label>
-    <input
-      type="tel"
-      id="ContactForm-phone"
-      class="contact-form__input"
-      autocomplete="tel"
-      name="contact[phone]"
-      pattern="[0-9\-]*"
-      value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
-      placeholder="{{ 'blocks.contact_form.phone' | t }}"
-    >
-
-    <label
-      class="visually-hidden"
-      for="ContactForm-body"
-    >
-      {{- 'blocks.contact_form.comment' | t -}}
-    </label>
-    <textarea
-      rows="10"
-      id="ContactForm-body"
-      class="contact-form__input contact-form__input--textarea"
-      name="contact[body]"
-      placeholder="{{ 'blocks.contact_form.comment' | t }}"
-    >
-      {{- form.body -}}
-    </textarea>
-
-    {{ submit_button }}
-  {%- endform -%}
+  </div>
 </div>
 
 {% stylesheet %}
-  .contact-form__form {
+  .medicross-contact {
+    --mc-surface-max-width: min(100%, 960px);
+    --mc-bg-start: #dae8ff;
+    --mc-bg-end: #f1f5ff;
+    --mc-surface-bg: #f9f6ff;
+    --mc-card-bg: #ffffff;
+    --mc-border-color: rgba(50, 56, 135, 0.12);
+    --mc-step-color: #ea5b87;
+    --mc-heading-color: #1a1a3d;
+    --mc-text-color: #282855;
+    --mc-muted-color: #4b4e78;
+    --mc-shadow: 0 22px 45px -30px rgba(35, 45, 120, 0.55);
     display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
+    justify-content: center;
+    padding: clamp(24px, 5vw, 48px);
+    border-radius: 32px;
+    background: linear-gradient(180deg, var(--mc-bg-start) 0%, var(--mc-bg-end) 100%);
   }
 
-  .contact-form__form-row {
+  .medicross-contact__wrapper {
+    width: var(--mc-surface-max-width);
+  }
+
+  .medicross-contact__surface {
+    background: var(--mc-surface-bg);
+    border-radius: 24px;
+    box-shadow: var(--mc-shadow);
+    padding: clamp(24px, 4vw, 40px);
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: clamp(24px, 3vw, 32px);
+  }
 
-    @media screen and (min-width: 750px) {
-      flex-direction: row;
-      align-items: center;
+  .medicross-contact__header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--mc-text-color);
+  }
+
+  .medicross-contact__heading-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .medicross-contact__heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+    font-weight: 700;
+    color: var(--mc-heading-color);
+  }
+
+  .medicross-contact__avatars {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 72px;
+    justify-content: flex-end;
+  }
+
+  .medicross-contact__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #fff;
+    box-shadow: 0 12px 24px -16px rgba(0, 0, 0, 0.35);
+  }
+
+  .medicross-contact__avatar--primary {
+    background: #3f51ff;
+    z-index: 2;
+  }
+
+  .medicross-contact__avatar--secondary {
+    background: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='a' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='translate(9 9) rotate(45) scale(48)'%3E%3Cstop stop-color='%23ffe2b6'/%3E%3Cstop offset='1' stop-color='%23ffb3c0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='24' fill='url(%23a)'/%3E%3C/svg%3E");
+    background-size: cover;
+    margin-left: -16px;
+  }
+
+  .medicross-contact__description {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--mc-muted-color);
+  }
+
+  .medicross-contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(24px, 3vw, 32px);
+  }
+
+  .medicross-contact__feedback {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .medicross-contact__feedback svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .medicross-contact__feedback--error {
+    background: rgba(218, 68, 83, 0.1);
+    color: #b4234a;
+  }
+
+  .medicross-contact__feedback--success {
+    background: rgba(42, 176, 120, 0.12);
+    color: #0b7a45;
+  }
+
+  .medicross-contact__grid {
+    display: grid;
+    gap: clamp(20px, 2.5vw, 28px);
+  }
+
+  .medicross-contact__group {
+    border: 1px solid var(--mc-border-color);
+    border-radius: 20px;
+    background: var(--mc-card-bg);
+    padding: 24px;
+    min-height: 100%;
+    position: relative;
+  }
+
+  .medicross-contact__legend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 0;
+  }
+
+  .medicross-contact__legend-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--mc-heading-color);
+  }
+
+  .medicross-contact__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--mc-step-color);
+    border-radius: 12px 12px 12px 4px;
+  }
+
+  .medicross-contact__inputs {
+    display: grid;
+    gap: 14px;
+  }
+
+  .medicross-contact__input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(26, 26, 61, 0.12);
+    background: #fff;
+    color: var(--mc-heading-color);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .medicross-contact__input:focus {
+    outline: none;
+    border-color: #4d5cf0;
+    box-shadow: 0 0 0 3px rgba(77, 92, 240, 0.18);
+  }
+
+  .medicross-contact__textarea {
+    min-height: 160px;
+    resize: vertical;
+  }
+
+  .medicross-contact__checkboxes {
+    display: grid;
+    gap: 12px;
+  }
+
+  .medicross-contact__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: var(--mc-text-color);
+  }
+
+  .medicross-contact__checkbox input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid rgba(26, 26, 61, 0.2);
+    display: grid;
+    place-items: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    background-color: #fff;
+  }
+
+  .medicross-contact__checkbox input::after {
+    content: '';
+    width: 9px;
+    height: 6px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) scale(0);
+    transition: transform 0.2s ease;
+  }
+
+  .medicross-contact__checkbox input:checked {
+    background-color: #4d5cf0;
+    border-color: #4d5cf0;
+  }
+
+  .medicross-contact__checkbox input:checked::after {
+    transform: rotate(-45deg) scale(1);
+  }
+
+  .medicross-contact__checkbox label {
+    cursor: pointer;
+  }
+
+  .medicross-contact__inline-error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #b4234a;
+  }
+
+  .medicross-contact__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid rgba(35, 44, 120, 0.12);
+  }
+
+  .medicross-contact__footer .button,
+  .medicross-contact__footer button {
+    border-radius: 999px;
+    padding: 14px 32px;
+    background: #2d244f;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .medicross-contact__footer .button:hover,
+  .medicross-contact__footer button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px -22px rgba(45, 36, 79, 0.85);
+  }
+
+  .medicross-contact__footer .button:focus-visible,
+  .medicross-contact__footer button:focus-visible {
+    outline: 2px solid #4d5cf0;
+    outline-offset: 3px;
+  }
+
+  @media screen and (min-width: 900px) {
+    .medicross-contact__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .medicross-contact__group--primary {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .medicross-contact__group--secondary {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .medicross-contact__group--fourth {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .medicross-contact__group--tertiary {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 
-  .contact-form__input {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--color-input-text);
-    background-color: var(--color-input-background);
-    padding: var(--padding-lg) var(--padding-xl);
-    border-radius: var(--style-border-radius-inputs);
-    border: var(--style-border-width-inputs) solid var(--color-input-border);
-    -webkit-font-smoothing: antialiased;
-  }
+  @media screen and (max-width: 600px) {
+    .medicross-contact {
+      padding: 16px;
+      border-radius: 20px;
+    }
 
-  .contact-form__input--textarea {
-    resize: vertical;
-    min-height: var(--input-textarea-min-height);
-  }
+    .medicross-contact__surface {
+      border-radius: 18px;
+      padding: 20px;
+    }
 
-  .contact-form__error,
-  .contact-form__success {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
+    .medicross-contact__heading-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .medicross-contact__avatars {
+      justify-content: flex-start;
+    }
+
+    .medicross-contact__group {
+      padding: 20px;
+    }
+
+    .medicross-contact__footer {
+      justify-content: center;
+    }
   }
 {% endstylesheet %}
