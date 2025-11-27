@@ -256,7 +256,7 @@
     var nextSelector = '.swiper-button-next-{{ section.id }}';
     var prevSelector = '.swiper-button-prev-{{ section.id }}';
     var paginationSelector = '.swiper-pagination-{{ section.id }}';
-    var hasMultipleSlides = {{ section.blocks.size > 1 | json }};
+    var hasMultipleSlides = {% if section.blocks.size > 1 %}true{% else %}false{% endif %};
     var autoplayEnabled = {{ section.settings.autoplay | json }};
     var autoplayDelay = {{ section.settings.autoplay_speed | json }};
 
